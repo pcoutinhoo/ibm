@@ -5,7 +5,7 @@
     "ACL": 1,
     "RoleMapping": 1,
     "Role": 1,
-    "reserva": 8
+    "reserva": 20
   },
   "models": {
     "User": {},
@@ -20,7 +20,19 @@
       "4": "{\"tipo\":\"tipo valido\",\"id\":4}",
       "5": "{\"tipo\":\"tipo valido\",\"id\":5}",
       "6": "{\"tipo\":\"tipo valido\",\"id\":6}",
-      "7": "{\"tipo\":\"tipo valido\",\"id\":7}"
+      "7": "{\"tipo\":\"tipo valido\",\"id\":7}",
+      "8": "{\"tipo\":\"tipo valido\",\"id\":8}",
+      "9": "{\"tipo\":\"tipo valido\",\"id\":9}",
+      "10": "{\"tipo\":\"tipo valido\",\"id\":10}",
+      "11": "{\"tipo\":\"tipo valido\",\"id\":11}",
+      "12": "{\"tipo\":\"HARD\",\"inicioEm\":\"2018-05-30T18:00:00.000Z\",\"status\":\"Ativa\",\"id\":12}",
+      "13": "{\"tipo\":\"HARD\",\"inicioEm\":\"2018-05-30T18:00:00.000Z\",\"fimEm\":\"2018-05-30T18:00:00.000Z\",\"status\":\"Ativa\",\"id\":13}",
+      "14": "{\"tipo\":\"HARD\",\"inicioEm\":\"2018-05-30T18:00:00.000Z\",\"fimEm\":\"2018-05-30T18:00:00.000Z\",\"status\":\"Ativa\",\"id\":14}",
+      "15": "{\"tipo\":\"HARD\",\"inicioEm\":\"2018-05-30T18:00:00.000Z\",\"fimEm\":\"2018-05-30T18:00:00.000Z\",\"status\":\"Ativa\",\"criadoEm\":\"Fri Nov 01 2019 11:04:31 GMT-0300 (Brasilia Standard Time)\",\"id\":15}",
+      "16": "{\"tipo\":\"HARD\",\"inicioEm\":\"2018-05-30T18:00:00.000Z\",\"fimEm\":\"2018-05-30T18:00:00.000Z\",\"status\":\"Ativa\",\"criadoEm\":\"2019-11-01T14:06:39.674Z\",\"id\":16}",
+      "17": "{\"tipo\":\"HARD\",\"inicioEm\":\"2018-05-30T18:00:00.000Z\",\"fimEm\":\"2018-05-30T19:00:00.000Z\",\"status\":\"Ativa\",\"criadoEm\":\"2019-11-01T14:25:07.291Z\",\"duracao\":\"0\",\"id\":17}",
+      "18": "{\"tipo\":\"HARD\",\"inicioEm\":\"2018-05-30T18:00:00.000Z\",\"fimEm\":\"2018-05-30T19:00:00.000Z\",\"status\":\"Ativa\",\"criadoEm\":\"2019-11-01T14:33:04.109Z\",\"duracao\":\"60\",\"id\":18}",
+      "19": "{\"tipo\":\"HARD\",\"inicioEm\":\"2018-05-30T18:00:00.000Z\",\"fimEm\":\"2018-05-30T19:00:00.000Z\",\"status\":\"Ativa\",\"criadoEm\":\"2019-11-01T14:35:52.684Z\",\"duracao\":\"60\",\"valor\":30,\"id\":19}"
     }
   }
 }

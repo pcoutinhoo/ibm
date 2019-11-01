@@ -24,8 +24,17 @@ module.exports = function(Reserva) {
       newError.code = 'Escolha um tipo válido';
       next(newError);
       return;
-    } else {
-      ctx.instance.tipo = 'tipo valido';
+    // eslint-disable-next-line max-len
+    } else if ((validacoes.validaInicioEm(ctx) == false) || (validacoes.validaFimEm(ctx) == false)) {
+      let newError = new Error('Data invalida');
+      newError.status = 400;
+      newError.code = 'Escolha uma data válido';
+      next(newError);
+      return;
+    }    else {
+      ctx.instance.criadoEm = new Date().toISOString();
+      ctx.instance.duracao = validacoes.duracao(ctx);
+      ctx.instance.valor = ctx.instance.duracao * 0.5;
       next();
       return;
     }
