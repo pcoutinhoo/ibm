@@ -1,0 +1,26 @@
+{
+  "ids": {
+    "User": 1,
+    "AccessToken": 1,
+    "ACL": 1,
+    "RoleMapping": 1,
+    "Role": 1,
+    "reserva": 8
+  },
+  "models": {
+    "User": {},
+    "AccessToken": {},
+    "ACL": {},
+    "RoleMapping": {},
+    "Role": {},
+    "reserva": {
+      "1": "{\"tipo\":\"tipo valido\",\"id\":1}",
+      "2": "{\"tipo\":\"tipo valido\",\"id\":2}",
+      "3": "{\"tipo\":\"tipo valido\",\"id\":3}",
+      "4": "{\"tipo\":\"tipo valido\",\"id\":4}",
+      "5": "{\"tipo\":\"tipo valido\",\"id\":5}",
+      "6": "{\"tipo\":\"tipo valido\",\"id\":6}",
+      "7": "{\"tipo\":\"tipo valido\",\"id\":7}"
+    }
+  }
+}

@@ -8,6 +8,39 @@
   "properties": {
     "id": {
       "type": "object"
+    },
+    "tipo":{
+      "type": "string",
+      "required": true
+    },
+    "inicioEM":{
+      "type": "date",
+      "required": true
+    },
+    "fimEm":{
+      "type": "date",
+      "required": true
+    },
+    "status":{
+      "type": "string",
+      "required": false,
+      "default": "Ativa"
+    },
+    "criadoEm":{
+      "type": "string",
+      "required": false
+    },
+    "duracao":{
+      "type": "string",
+      "required": false
+    },
+    "valor":{
+      "type": "number",
+      "required": false
+    },
+    "canceladaEm":{
+      "type": "string",
+      "required": false
     }
   },
   "validations": [],
