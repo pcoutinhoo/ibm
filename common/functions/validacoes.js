@@ -1,13 +1,12 @@
-const reserva = require('../models/reserva');
+const reserva = require('../models/reserva').default;
 
 module.exports = {
   validaTipo: _validaTipo,
   validaInicioEm: _validaInicioEm,
   validaFimEm: _validaFimEm,
-  duracao: duracao,
+  duracao: _duracao,
   status: _status,
-  duracaoR: _duracaoReserva,
-  //validaReserva: _validaReserva,
+  duracaoReserva: _duracaoReserva,
 };
 
 const type = {
@@ -41,7 +40,7 @@ function _validaFimEm(ctx) {
   return false;
 }
 
-function duracao(ctx) {
+function _duracao(ctx) {
   let fim  = ctx.instance.fimEm.getTime();
   let inicio = ctx.instance.inicioEm.getTime();
   let duracao = ((fim - inicio) / 3600000) * 60;
@@ -60,22 +59,3 @@ function _duracaoReserva(ctx) {
     return true;
   } return false;
 }
-
-
-// const _validaReserva = async (ctx) => {
-//     return new Promise(resolve, reject) => {
-//         reserva.find({
-//         where: {
-//             and : [{inicioEm: {lte:{ctx.instance.inicioEm.toIsoString()}}}, {fimEm : {lt:{ctx.instance.inicioEm.toIsoString()}}}],
-//         }
-//     })
-//         .then(dados =>{
-//             if(dados.lenght === 0){
-//                 return resolve(true);
-//             }
-//             return resolve(false);
-//         })
-//     }
-
-// }
-

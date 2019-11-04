@@ -1,20 +1,25 @@
 const _newError = {
-   400: {
+   TIPO_INVALIDO: {
      statusCode: '400',
      message: 'Tipo Invalido',
    },
-   401: {
+   DATA_INVALIDA: {
      statusCode: '400',
      message: 'Data Invalida',
    },
-   402: {
+   STATUS_INVALIDO: {
      statusCode: '400',
      message: 'Status Invalido',
    },
-   422: {
+   DURACAO_INVALIDA: {
      statusCode: '422',
      message: 'Duracao Invalida',
    },
+   HORARIO_INVALIDO: {
+    statusCode: '422',
+    message: 'O horário solicitado não está disponível, favor selecione um outro horário.',
+    code: "HORARIO_INVALIDO"
+  },
  };
  module.exports = {
    newError: _newError,

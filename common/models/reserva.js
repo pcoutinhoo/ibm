@@ -13,6 +13,32 @@ module.exports = function(Reserva) {
   Reserva.disableRemoteMethodByName('createChangeStream');
   Reserva.disableRemoteMethodByName('exists');
 
+
+  function _validaHorarioReserva (ctx) {
+    return new Promise((resolve, reject) => {
+      Reserva.find({
+            where:{
+                tipo: ctx.instance.tipo,
+                or: [
+                    {and:[{inicioEm : {lte:(ctx.instance.inicioEm)}},{fimEm:{gt:(ctx.instance.inicioEm)}},{or:[{status:'Ativa'},{status: 'Pago'}
+                        ]}]},
+                    {and:[{inicioEm : {lt:(ctx.instance.fimEm)}},{fimEm:{gte:(ctx.instance.fimEm)}},{or:[{status:'Ativa'}, {status: 'Pago'}
+                        ]} ]},
+                    {and:[{inicioEm : {gt:(ctx.instance.inicioEm)}},{fimEm:{lt:(ctx.instance.fimEm)}},{or:[{status:'Ativa'}, {status: 'Pago'}
+                        ]} ]}
+                ]
+            }
+        }).then(data => {
+          if(data.length === 0 ){
+              return resolve(true);
+          }
+          return resolve(false);    
+      }).catch((error) => {
+        return reject(error);
+      });
+    })
+  };
+
   Reserva.on('attached', function() {
     Reserva.deleteById = function(id, x, cb) {
       Reserva.updateAll({id: id},
@@ -20,29 +46,36 @@ module.exports = function(Reserva) {
           canceladaEm: new Date().toISOString()}, cb);
     };
   });
-  Reserva.observe('before save', function(ctx, next) {
-     if (!ctx.instance) {
+
+  Reserva.observe('before save', async function(ctx, next) {
+    if (!ctx.instance) {
       next();
-      return;
-    }if (validacoes.validaTipo(ctx) == false) {
-      next(erros.newError[400]);
-      return;
+      return false;
+    } if (validacoes.validaTipo(ctx) == false) {
+      next(erros.newError.TIPO_INVALIDO);
+      return false;
     } if ((validacoes.validaInicioEm(ctx) == false) || (validacoes.validaFimEm(ctx) == false)) {
-      next(erros.newError[401]);
-      return;
+      next(erros.newError.DATA_INVALIDA);
+      return false;
     } if (validacoes.status(ctx) == false) {
-      next(erros.newError[402]);
-      return;
+      next(erros.newError.STATUS_INVALIDO);
+      return false;
     }
     ctx.instance.duracao = validacoes.duracao(ctx);
-    if (validacoes.duracaoR(ctx) == false) {
-      next(erros.newError[422]);
-      return;
-    }    else {
+    if (validacoes.duracaoReserva(ctx) == false) {
+      next(erros.newError.DURACAO_INVALIDA);
+      return false;
+    } 
+    let validaHorario = await _validaHorarioReserva(ctx);
+    if (!validaHorario){
+      next(erros.newError.HORARIO_INVALIDO);
+      return false;
+    } else {
       ctx.instance.criadoEm = new Date().toISOString();
       ctx.instance.valor = ctx.instance.duracao * 0.5;
       next();
       return;
     }
   });
+
 };
