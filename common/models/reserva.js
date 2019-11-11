@@ -33,8 +33,6 @@ module.exports = function(Reserva) {
               return resolve(true);
           }
           return resolve(false);    
-      }).catch((error) => {
-        return reject(error);
       });
     })
   };

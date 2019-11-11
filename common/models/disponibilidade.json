@@ -1,0 +1,38 @@
+{
+  "name": "disponibilidade",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "id": {
+      "type": "object"
+    },
+    "tipo": {
+      "type": "string",
+      "required": true
+    },
+    "duracao": {
+      "type": "string",
+      "required": false
+    },
+    "inicioEm": {
+      "type": "date",
+      "required": true
+    },
+    "fimEm": {
+      "type": "date",
+      "required": true
+    },
+    "status": {
+      "type": "string",
+      "required": false,
+      "default": "Ativa"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

@@ -7,6 +7,8 @@ module.exports = {
   duracao: _duracao,
   status: _status,
   duracaoReserva: _duracaoReserva,
+  addHours: _addHours,
+  subHours: _subHours,
 };
 
 const type = {
@@ -59,3 +61,14 @@ function _duracaoReserva(ctx) {
     return true;
   } return false;
 }
+
+function _addHours(data){
+    let addHours = data.setHours(data.getHours() + 1); 
+    return new Date(addHours);
+}
+
+function _subHours(data){
+  let subHours = data.setHours(data.getHours() - 1); 
+  return new Date(subHours);
+}
+
