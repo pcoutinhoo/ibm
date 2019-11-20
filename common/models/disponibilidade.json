@@ -28,7 +28,7 @@
     "status": {
       "type": "string",
       "required": false,
-      "default": "Ativa"
+      "default": "Disponivel"
     }
   },
   "validations": [],

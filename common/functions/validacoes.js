@@ -35,6 +35,7 @@ function _validaInicioEm(ctx) {
   }
   return false;
 }
+
 function _validaFimEm(ctx) {
   if (new Date(ctx.instance.fimEm) != 'Invalid Date') {
     ctx.instance.fimEm = new Date(ctx.instance.fimEm);

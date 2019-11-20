@@ -29,7 +29,7 @@ module.exports = function(Reserva) {
                 ]
             }
         }).then(data => {
-          if(data.length === 0 ){
+          if(data.length == 0 ){
               return resolve(true);
           }
           return resolve(false);    
@@ -46,18 +46,18 @@ module.exports = function(Reserva) {
   });
 
   Reserva.observe('before save', async function(ctx, next) {
-    if (!ctx.instance) {
-      next();
-      return false;
-    } if (validacoes.validaTipo(ctx) == false) {
-      next(erros.newError.TIPO_INVALIDO);
-      return false;
+      if (!ctx.instance) {
+        next();
+        return false;
+     }if (validacoes.validaTipo(ctx) == false) {
+        next(erros.newError.TIPO_INVALIDO);
+        return false;
     } if ((validacoes.validaInicioEm(ctx) == false) || (validacoes.validaFimEm(ctx) == false)) {
-      next(erros.newError.DATA_INVALIDA);
-      return false;
+        next(erros.newError.DATA_INVALIDA);
+        return false;
     } if (validacoes.status(ctx) == false) {
-      next(erros.newError.STATUS_INVALIDO);
-      return false;
+        next(erros.newError.STATUS_INVALIDO);
+        return false;
     }
     ctx.instance.duracao = validacoes.duracao(ctx);
     if (validacoes.duracaoReserva(ctx) == false) {
@@ -68,9 +68,10 @@ module.exports = function(Reserva) {
     if (!validaHorario){
       next(erros.newError.HORARIO_INVALIDO);
       return false;
-    } else {
-      ctx.instance.criadoEm = new Date().toISOString();
-      ctx.instance.valor = ctx.instance.duracao * 0.5;
+    } 
+    else {
+        ctx.instance.criadoEm = new Date().toISOString();
+        ctx.instance.valor = ctx.instance.duracao * 0.5;
       next();
       return;
     }
