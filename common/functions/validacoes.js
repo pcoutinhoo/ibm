@@ -1,4 +1,4 @@
-const reserva = require('../models/reserva').default;
+const moment = require('moment');
 
 module.exports = {
   validaTipo: _validaTipo,
@@ -19,6 +19,7 @@ const status = {
   Ativa: 'Ativa',
   Cancelada: 'Cancelada',
   Pago: 'Pago',
+  Disponivel: 'Disponivel',
 };
 function _validaTipo(ctx) {
   if (type[ctx.instance.tipo]) {
@@ -62,13 +63,13 @@ function _duracaoReserva(ctx) {
   } return false;
 }
 
-function _addHours(data){
-    let addHours = data.setHours(data.getHours() + 1); 
-    return new Date(addHours);
+function _addHours(ctx){
+    let  data = moment(ctx.instance.fimEm).utc().add(((ctx.instance.duracao / 60) + 1), 'hours').format();
+   return data;
 }
 
-function _subHours(data){
-  let subHours = data.setHours(data.getHours() - 1); 
-  return new Date(subHours);
+function _subHours(ctx){
+  let  data = moment(ctx.instance.inicioEm).utc().subtract(((ctx.instance.duracao / 60) + 1), 'hours').format();
+  return data;
 }
 

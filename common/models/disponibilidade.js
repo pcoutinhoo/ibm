@@ -1,7 +1,7 @@
 'use strict';
 const validacoes = require('../functions/validacoes');
 const erros = require('../enum/statusError');
-const request = require('request');
+const moment = require('moment');
 
 module.exports = function(Disponibilidade) {
   var app = require('../../server/server');
@@ -64,7 +64,7 @@ module.exports = function(Disponibilidade) {
     }
     }
     ).then(prioridade2 => {
-      console.log(filter)
+      console.log(prioridade2);
       if(prioridade2.length == 0 && (ctx.instance.tipo == "HARD" ? ctx.instance.tipo = "SAIBRO" : ctx.instance.tipo = "HARD" )){
             resolve(true);
       }
@@ -75,9 +75,98 @@ module.exports = function(Disponibilidade) {
   }
 
 
-  const ValidaSegundaPrioridade = ctx => {
+  const ValidaSegundaPrioridadeMenosUmaHora = ctx => {
+    return new Promise((resolve, reject) => {
+    let fim = moment(ctx.instance.inicioEm).subtract(1,'hour');
+    const Reserva = app.models.Reserva;
+    Reserva.find({
+      where:{
+        tipo: ctx.instance.tipo,and:[{fimEm: fim},{inicioEm: validacoes.subHours(ctx)},{or:[{status:'Ativa'},{status: 'Pago'}]},]
+      }
+    }).then(menosUmHora =>{
+      console.log('where', menosUmHora);
+      if(menosUmHora.length == 0){
+        ctx.instance.fimEm = fim;
+        ctx.instance.inicioEm = validacoes.subHours(ctx);
+        ctx.instance.status = validacoes.status.Disponivel;
+        resolve(true);
+      }
+      resolve(false);
+    })
+    })
+  }
+
+
+  const validaSegundaPiroridadeMaisUmaHora = ctx => {
+    return new Promise((resolve, reject) => {
+      const Reserva = app.models.Reserva;
+      let inicio = moment(ctx.instance.fimEm).add(1,'hour');
+      Reserva.find({
+        where:{
+          tipo: ctx.instance.tipo, and:[{inicioEm: inicio},{fimEm: validacoes.addHours(ctx)},{or:[{status:'Ativa'},{status: 'Pago'}]},]
+        }
+      }).then(maisUmHora =>{
+        console.log('where', maisUmHora);
+        if(maisUmHora.length == 0){
+          ctx.instance.inicioEm = inicio;
+          ctx.instance.fimEm = validacoes.addHours(ctx); 
+          ctx.instance.status = validacoes.status.Disponivel;
+          resolve(true);
+        }
+        resolve(false);
+      })
+      })
+  }
+
+
+  const ValidaTerceiraPrioridadeMenosUmaHora = ctx => {
+    return new Promise((resolve, reject) => {
+      let fim = moment(ctx.instance.inicioEm).subtract(1,'hour');
+      const Reserva = app.models.Reserva;
+      Reserva.find({
+        where:{
+          tipo: {neq: ctx.instance.tipo},and:[{fimEm: fim},{inicioEm: validacoes.subHours(ctx)},{or:[{status:'Ativa'},{status: 'Pago'}]},]
+        }
+      }).then(prioridade2 => {
+      if(prioridade2.length == 0){
+            ctx.instance.tipo = ctx.instance.tipo == "HARD" ? ctx.instance.tipo = "SAIBRO" : ctx.instance.tipo = "HARD";
+            ctx.instance.fimEm = fim;
+            ctx.instance.inicioEm = validacoes.subHours(ctx);
+            ctx.instance.status = validacoes.status.Disponivel;
+            resolve(true);
+      }
+      resolve(false); 
+    })
+  });
+  }
+
+  const ValidaTerceiraPrioridadeMaisUmaHora = ctx => {
     return new Promise((resolve, reject) => {
     const Reserva = app.models.Reserva;
+    let inicio = moment(ctx.instance.fimEm).add(1,'hour');
+      Reserva.find({
+        where:{
+          tipo: {neq: ctx.instance.tipo}, and:[{inicioEm: inicio},{fimEm: validacoes.addHours(ctx)},{or:[{status:'Ativa'},{status: 'Pago'}]},]
+        }
+      }).then(prioridade4 => {
+        console.log('where', prioridade4);
+        if(prioridade4.length == 0){
+          ctx.instance.tipo = ctx.instance.tipo == "HARD" ? ctx.instance.tipo = "SAIBRO" : ctx.instance.tipo = "HARD";
+          ctx.instance.inicioEm = inicio;
+          ctx.instance.fimEm = validacoes.addHours(ctx); 
+          ctx.instance.status = validacoes.status.Disponivel;
+          resolve(true);
+      }
+      resolve(false)
+    })
+   
+  });
+  }
+
+  const ValidaQuartaPrioridadeMenosDuasHora = ctx => {
+    return new Promise((resolve, reject) => {
+    const Reserva = app.models.Reserva;
+    
     let inicio = ctx.instance.inicioEm;
     ctx.instance.fimEm = ctx.instance.inicioEm
     
@@ -111,8 +200,7 @@ module.exports = function(Disponibilidade) {
    
   }
 
-
-  const validaSegundaPiroridadeMaisUmaHora = ctx => {
+  const validaSegundaPiroridadeMaisDuasHora = ctx => {
    return new Promise((resolve, reject) => {
     const Reserva = app.models.Reserva;
     ctx.instance.inicioEm = ctx.instance.fimEm
@@ -144,57 +232,7 @@ module.exports = function(Disponibilidade) {
   }
 
 
-
-
-
-  const ValidaTerceiraPrioridade = ctx => {
-    return new Promise((resolve, reject) => {
-    const Reserva = app.models.Reserva;
-    let filter =  Reserva.find({
-      where:{
-        tipo: { neq: ctx.instance.tipo},
-        or: [
-            {and:[{fimEm: ctx.instance.inicioEm},{inicioEm: validacoes.subHours(inicio)},{or:[{status:'Ativa'}, {status: 'Pago'}]}]},
-            {and:[{inicioEm: ctx.instance.fimEm},{fimEm: validacoes.addHours(fim)},{or:[{status:'Ativa'}, {status: 'Pago'}]}]}
-        ]
-    }
-    }
-    ).then(prioridade2 => {
-      console.log(filter)
-      if(prioridade2.length == 0 && (ctx.instance.tipo == "HARD" ? ctx.instance.tipo = "SAIBRO" : ctx.instance.tipo = "HARD" )){
-            resolve(true);
-      }
-      resolve(false);
-    })
-   
-  });
-  }
-
-  const ValidaQuartaPrioridade = ctx => {
-    return new Promise((resolve, reject) => {
-    const Reserva = app.models.Reserva;
-    let addHoursFimEm = new Date().setHours(ctx.instance.fimEm.getHours() + 2 );
-    let subHoursFimEm = new Date().setHours(ctx.instance.inicioEm.getHours() - 2 );
-    Reserva.find({
-      where:{
-        tipo: ctx.instance.tipo,
-        or: [
-            {and:[{fimEm: ctx.instance.inicioEm},{inicioEm: new Date(subHoursFimEm)},{or:[{status:'Ativa'}, {status: 'Pago'}]}]},
-            {and:[{inicioEm: ctx.instance.fimEm},{fimEm: new Date(addHours)},{or:[{status:'Ativa'}, {status: 'Pago'}]}]}
-        ]
-    }
-    }
-    ).then(prioridade4 => {
-      if(prioridade4.length == 0){
-            resolve(true);
-      }
-      resolve(false);
-    })
-   
-  });
-  }
-
-
+  
   Disponibilidade.observe('before save', async function(ctx, next) {
     if (!ctx.instance) {
       next();
@@ -204,12 +242,19 @@ module.exports = function(Disponibilidade) {
     if (!mesmoHorario){
       let mesmoHorarioOutroTipo = await ValidaPrimeiraPrioridade(ctx);
         if (!mesmoHorarioOutroTipo){
-          let segundaValidacaoMenosUmaHora = await ValidaSegundaPrioridade(ctx);
+          let segundaValidacaoMenosUmaHora = await ValidaSegundaPrioridadeMenosUmaHora(ctx);
             if (!segundaValidacaoMenosUmaHora){
              let segundaValidacaoMaisUmaHora = await validaSegundaPiroridadeMaisUmaHora(ctx);
                if(!segundaValidacaoMaisUmaHora){
-                next(erros.newError.HORARIO_INVALIDO)
-                return false;
+                  let terceiraValidacaoMenosUmaHora = await ValidaTerceiraPrioridadeMenosUmaHora(ctx);
+                  if(!terceiraValidacaoMenosUmaHora){
+                    let terceiraValidacaoMaisUmaHora = await ValidaTerceiraPrioridadeMaisUmaHora(ctx);
+                    if(!terceiraValidacaoMaisUmaHora){
+                      next(erros.newError.HORARIO_INVALIDO)
+                      return false;
+                    }
+                  }
+                  
                }
        }
      }
